@@ -1,45 +1,12 @@
 import os
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+basedir = os.path.abspath(os.path.dirname(__file__))
 
-# ============================
-# DATABASE
-# ============================
-
-DATABASE_FOLDER = os.path.join(BASE_DIR, "database")
-DATABASE_PATH = os.path.join(DATABASE_FOLDER, "phones.db")
-
-DATABASE_URI = f"sqlite:///{DATABASE_PATH}"
-
-# ============================
-# UPLOAD
-# ============================
-
-UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
-
-# ============================
-# DATASET
-# ============================
-
-DATASET_FOLDER = os.path.join(BASE_DIR, "dataset")
-
-IMAGES_FOLDER = os.path.join(DATASET_FOLDER, "images")
-
-LABELS_FOLDER = os.path.join(DATASET_FOLDER, "labels")
-
-# ============================
-# MODEL
-# ============================
-
-WEIGHTS_FOLDER = os.path.join(BASE_DIR, "weights")
-
-MODEL_PATH = os.path.join(WEIGHTS_FOLDER, "best.pt")
-
-# ============================
-# CAMERA
-# ============================
-
-CAMERA_WIDTH = 1280
-CAMERA_HEIGHT = 720
-
-CONFIDENCE = 0.5
+class Config:
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'quan-ly-kho-secret-key-2024'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'kho.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    LOW_STOCK_THRESHOLD = 10
+    JSON_AS_ASCII = False          # Fix tiếng Việt trong JSON
+    JSONIFY_MIMETYPE = 'application/json; charset=utf-8'
