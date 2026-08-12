@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ customer.name }} - KhoManager{% endblock %}
+{% block page_title %}<i class="bi bi-person-fill me-2" style="color:#f97316;"></i>Chi tiết Khách hàng{% endblock %}
+
+{% block content %}
+<div class="page-header mb-3">
+    <div><h4>{{ customer.name }}</h4><p>Thông tin và lịch sử mua hàng</p></div>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('customers.edit', id=customer.id) }}" class="btn btn-outline-custom"><i class="bi bi-pencil-fill me-1"></i>Chỉnh sửa</a>
+        <a href="{{ url_for('customers.index') }}" class="btn btn-outline-custom"><i class="bi bi-arrow-left me-1"></i>Quay lại</a>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card-table">
+            <div class="card-header"><i class="bi bi-info-circle me-2"></i>Thông tin</div>
+            <div style="padding:1.25rem;">
+                <div style="width:64px;height:64px;background:linear-gradient(135deg,#1e3a5f,#2d5a8e);border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1.5rem;margin-bottom:1rem;">
+                    {{ customer.name[0]|upper }}
+                </div>
+                <h5 style="font-weight:700;color:#1a2332;">{{ customer.name }}</h5>
+                {% if customer.phone %}<p style="color:#64748b;margin-bottom:0.5rem;"><i class="bi bi-telephone-fill me-2" style="color:#f97316;"></i>{{ customer.phone }}</p>{% endif %}
+                {% if customer.email %}<p style="color:#64748b;margin-bottom:0.5rem;"><i class="bi bi-envelope-fill me-2" style="color:#f97316;"></i>{{ customer.email }}</p>{% endif %}
+                {% if customer.address %}<p style="color:#64748b;margin-bottom:0.5rem;"><i class="bi bi-geo-alt-fill me-2" style="color:#f97316;"></i>{{ customer.address }}</p>{% endif %}
+                {% if customer.note %}<p style="color:#64748b;font-style:italic;font-size:0.875rem;">{{ customer.note }}</p>{% endif %}
+                <hr style="border-color:#f1f5f9;">
+                <div class="text-center">
+                    <div style="font-size:0.75rem;color:#94a3b8;">Tổng chi tiêu</div>
+                    <div style="font-size:1.4rem;font-weight:800;color:#059669;">{{ "{:,.0f}".format(customer.total_spent) }} ₫</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card-table">
+            <div class="card-header"><i class="bi bi-receipt me-2" style="color:#f97316;"></i>Lịch sử mua hàng ({{ invoices|length }} hóa đơn)</div>
+            <table class="table">
+                <thead>
+                    <tr><th>Số HĐ</th><th>Ngày</th><th>Tổng tiền</th><th>Trạng thái</th><th></th></tr>
+                </thead>
+                <tbody>
+                    {% for inv in invoices %}
+                    <tr>
+                        <td><a href="{{ url_for('reports.invoice_detail', id=inv.id) }}" style="color:#f97316;font-weight:600;text-decoration:none;">{{ inv.invoice_no }}</a></td>
+                        <td style="color:#64748b;">{{ inv.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td style="font-weight:700;">{{ "{:,.0f}".format(inv.total) }} ₫</td>
+                        <td><span class="badge" style="background:#ecfdf5;color:#059669;">Đã thanh toán</span></td>
+                        <td><a href="{{ url_for('reports.invoice_detail', id=inv.id) }}" class="btn btn-sm" style="background:#f8fafc;color:#64748b;border-radius:8px;padding:3px 10px;">Xem</a></td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5" class="text-center py-4" style="color:#94a3b8;">Chưa có hóa đơn nào</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

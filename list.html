@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Khách hàng - KhoManager{% endblock %}
+{% block page_title %}<i class="bi bi-people-fill me-2" style="color:#f97316;"></i>Quản lý Khách hàng{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h4>Danh sách Khách hàng</h4>
+        <p>Quản lý thông tin khách hàng</p>
+    </div>
+    <a href="{{ url_for('customers.add') }}" class="btn btn-primary-custom">
+        <i class="bi bi-person-plus-fill me-1"></i>Thêm khách hàng
+    </a>
+</div>
+
+<!-- Search -->
+<div class="card-table mb-3">
+    <div style="padding:1rem 1.25rem;">
+        <form method="GET" class="row g-2 align-items-end">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text" style="border-radius:10px 0 0 10px;border:1.5px solid #e2e8f0;border-right:none;background:#f8fafc;"><i class="bi bi-search" style="color:#94a3b8;"></i></span>
+                    <input type="text" name="search" class="form-control" placeholder="Tìm theo tên, số điện thoại, email..." value="{{ search }}" style="border-radius:0 10px 10px 0;border-left:none;">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary-custom w-100"><i class="bi bi-search me-1"></i>Tìm</button>
+            </div>
+            <div class="col-md-2">
+                <a href="{{ url_for('customers.index') }}" class="btn btn-outline-custom w-100">Xóa lọc</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card-table">
+    <div class="card-header">Tổng: <strong>{{ customers.total }}</strong> khách hàng</div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tên khách hàng</th>
+                    <th>Số điện thoại</th>
+                    <th>Email</th>
+                    <th>Địa chỉ</th>
+                    <th>Tổng chi tiêu</th>
+                    <th>Ngày tạo</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in customers.items %}
+                <tr>
+                    <td style="color:#94a3b8;font-size:0.8rem;">{{ loop.index + (customers.page - 1) * 10 }}</td>
+                    <td>
+                        <a href="{{ url_for('customers.view', id=c.id) }}" style="font-weight:600;color:#1a2332;text-decoration:none;">
+                            <div style="width:32px;height:32px;background:linear-gradient(135deg,#1e3a5f,#2d5a8e);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.85rem;margin-right:8px;">{{ c.name[0]|upper }}</div>
+                            {{ c.name }}
+                        </a>
+                    </td>
+                    <td>{{ c.phone or '—' }}</td>
+                    <td style="color:#64748b;">{{ c.email or '—' }}</td>
+                    <td style="max-width:180px;color:#64748b;font-size:0.82rem;">{{ c.address[:40] + '...' if c.address and c.address|length > 40 else c.address or '—' }}</td>
+                    <td style="font-weight:600;color:#059669;">{{ "{:,.0f}".format(c.total_spent) }} ₫</td>
+                    <td style="color:#64748b;font-size:0.8rem;">{{ c.created_at.strftime('%d/%m/%Y') }}</td>
+                    <td class="text-center">
+                        <div class="d-flex gap-1 justify-content-center">
+                            <a href="{{ url_for('customers.view', id=c.id) }}" class="btn btn-sm" style="background:#ecfdf5;color:#059669;border-radius:8px;padding:4px 10px;" title="Xem chi tiết">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                            <a href="{{ url_for('customers.edit', id=c.id) }}" class="btn btn-sm" style="background:#eff6ff;color:#1d4ed8;border-radius:8px;padding:4px 10px;" title="Chỉnh sửa">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="8" class="text-center py-5" style="color:#94a3b8;">
+                    <i class="bi bi-people" style="font-size:2.5rem;display:block;"></i>
+                    Chưa có khách hàng nào
+                </td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if customers.pages > 1 %}
+    <div style="padding:1rem;border-top:1px solid #f1f5f9;">
+        <nav>
+            <ul class="pagination mb-0 justify-content-center">
+                {% if customers.has_prev %}<li class="page-item"><a class="page-link" href="{{ url_for('customers.index', page=customers.prev_num, search=search) }}"><i class="bi bi-chevron-left"></i></a></li>{% endif %}
+                {% for num in customers.iter_pages() %}
+                    {% if num %}<li class="page-item {% if num == customers.page %}active{% endif %}"><a class="page-link" href="{{ url_for('customers.index', page=num, search=search) }}">{{ num }}</a></li>
+                    {% else %}<li class="page-item disabled"><span class="page-link">…</span></li>{% endif %}
+                {% endfor %}
+                {% if customers.has_next %}<li class="page-item"><a class="page-link" href="{{ url_for('customers.index', page=customers.next_num, search=search) }}"><i class="bi bi-chevron-right"></i></a></li>{% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

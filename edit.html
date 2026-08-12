@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Sửa khách hàng - KhoManager{% endblock %}
+{% block page_title %}<i class="bi bi-pencil-fill me-2" style="color:#f97316;"></i>Sửa Khách hàng{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-xl-7">
+    <div class="page-header mb-3">
+        <div><h4>Cập nhật khách hàng</h4><p>{{ customer.name }}</p></div>
+        <a href="{{ url_for('customers.index') }}" class="btn btn-outline-custom"><i class="bi bi-arrow-left me-1"></i>Quay lại</a>
+    </div>
+    <div class="card-table">
+        <div style="padding:1.5rem;">
+            <form method="POST" action="{{ url_for('customers.edit', id=customer.id) }}">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">Tên khách hàng <span style="color:red;">*</span></label>
+                        <input type="text" name="name" class="form-control" value="{{ customer.name }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="text" name="phone" class="form-control" value="{{ customer.phone }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" value="{{ customer.email }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Địa chỉ</label>
+                        <input type="text" name="address" class="form-control" value="{{ customer.address }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Ghi chú</label>
+                        <textarea name="note" class="form-control" rows="2">{{ customer.note }}</textarea>
+                    </div>
+                    <div class="col-12 d-flex gap-2 justify-content-end">
+                        <a href="{{ url_for('customers.index') }}" class="btn btn-outline-custom">Hủy</a>
+                        <button type="submit" class="btn btn-primary-custom"><i class="bi bi-check-circle-fill me-1"></i>Cập nhật</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
