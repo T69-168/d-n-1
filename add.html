@@ -1,41 +1,76 @@
 {% extends "base.html" %}
-{% block title %}Thêm khách hàng - KhoManager{% endblock %}
-{% block page_title %}<i class="bi bi-person-plus-fill me-2" style="color:#f97316;"></i>Thêm Khách hàng{% endblock %}
+{% block title %}Thêm sản phẩm - KhoManager{% endblock %}
+{% block page_title %}<i class="bi bi-plus-circle-fill me-2" style="color:#f97316;"></i>Thêm Sản phẩm mới{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-<div class="col-xl-7">
+<div class="col-xl-8">
     <div class="page-header mb-3">
-        <div><h4>Thêm khách hàng mới</h4><p>Điền thông tin khách hàng</p></div>
-        <a href="{{ url_for('customers.index') }}" class="btn btn-outline-custom"><i class="bi bi-arrow-left me-1"></i>Quay lại</a>
+        <div>
+            <h4>Thêm sản phẩm mới</h4>
+            <p>Điền đầy đủ thông tin sản phẩm</p>
+        </div>
+        <a href="{{ url_for('products.index') }}" class="btn btn-outline-custom"><i class="bi bi-arrow-left me-1"></i>Quay lại</a>
     </div>
+
     <div class="card-table">
         <div style="padding:1.5rem;">
-            <form method="POST" action="{{ url_for('customers.add') }}">
+            <form method="POST" action="{{ url_for('products.add') }}">
                 <div class="row g-3">
-                    <div class="col-12">
-                        <label class="form-label">Tên khách hàng <span style="color:red;">*</span></label>
-                        <input type="text" name="name" class="form-control" placeholder="Họ và tên khách hàng" required>
+                    <div class="col-md-4">
+                        <label class="form-label">Mã sản phẩm <span style="color:red;">*</span></label>
+                        <input type="text" name="code" class="form-control" placeholder="VD: SP001" required>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label">Tên sản phẩm <span style="color:red;">*</span></label>
+                        <input type="text" name="name" class="form-control" placeholder="Nhập tên sản phẩm..." required>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Số điện thoại</label>
-                        <input type="text" name="phone" class="form-control" placeholder="0901234567">
+                        <label class="form-label">Danh mục</label>
+                        <input type="text" name="category" class="form-control" placeholder="VD: Điện tử, Phụ kiện..." list="category-list">
+                        <datalist id="category-list">
+                            {% for cat in categories %}
+                            <option value="{{ cat }}">
+                            {% endfor %}
+                        </datalist>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="email@example.com">
+                        <label class="form-label">Đơn vị tính</label>
+                        <select name="unit" class="form-select">
+                            <option value="Cái">Cái</option>
+                            <option value="Chiếc">Chiếc</option>
+                            <option value="Hộp">Hộp</option>
+                            <option value="Bộ">Bộ</option>
+                            <option value="Kg">Kg</option>
+                            <option value="Lít">Lít</option>
+                            <option value="Thanh">Thanh</option>
+                            <option value="Cuộn">Cuộn</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Giá bán (VNĐ) <span style="color:red;">*</span></label>
+                        <input type="number" name="price" class="form-control" placeholder="0" min="0" step="1000" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Giá nhập (VNĐ)</label>
+                        <input type="number" name="cost" class="form-control" placeholder="0" min="0" step="1000">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Số lượng ban đầu</label>
+                        <input type="number" name="quantity" class="form-control" placeholder="0" min="0" value="0">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Mức tồn kho tối thiểu</label>
+                        <input type="number" name="min_stock" class="form-control" placeholder="5" min="0" value="5">
+                        <div class="form-text">Cảnh báo khi tồn kho xuống dưới mức này</div>
                     </div>
                     <div class="col-12">
-                        <label class="form-label">Địa chỉ</label>
-                        <input type="text" name="address" class="form-control" placeholder="Số nhà, đường, quận, thành phố...">
+                        <label class="form-label">Mô tả sản phẩm</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Nhập mô tả sản phẩm..."></textarea>
                     </div>
-                    <div class="col-12">
-                        <label class="form-label">Ghi chú</label>
-                        <textarea name="note" class="form-control" rows="2" placeholder="Ghi chú thêm về khách hàng..."></textarea>
-                    </div>
-                    <div class="col-12 d-flex gap-2 justify-content-end">
-                        <a href="{{ url_for('customers.index') }}" class="btn btn-outline-custom">Hủy</a>
-                        <button type="submit" class="btn btn-primary-custom"><i class="bi bi-check-circle-fill me-1"></i>Lưu khách hàng</button>
+                    <div class="col-12 d-flex gap-2 justify-content-end mt-2">
+                        <a href="{{ url_for('products.index') }}" class="btn btn-outline-custom">Hủy</a>
+                        <button type="submit" class="btn btn-primary-custom"><i class="bi bi-check-circle-fill me-1"></i>Lưu sản phẩm</button>
                     </div>
                 </div>
             </form>
